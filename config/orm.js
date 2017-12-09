@@ -7,12 +7,30 @@ var connection = require('./connection.js');
 
 var orm = {
 	selectAll: function(callback) {
-		var query = 'SELECT * FROM burgers ORDER BY burger_name ASC';
-    	connection.query(query, callback);
-      		
-	}	
-}
+		connection.query('SELECT * FROM burgers', function (err, result) {
+    		if (err) throw err;
+    		callback(result); 		
+		});	
+	},
 
+	insertOne: function(burger_name, callback) {
+		connection.query('INSERT INTO burgers SET ?', {
+			burger_name: burger_name,
+			devoured: false, 
+			date: timestamp
+		}, function (err, result) {
+			if (err) throw err;
+			callback(result);
+		});
+	}, 
+
+	updateOne: function(burgerID, callback) {
+		connection.query('UPDATE burgers SET ? WHERE ?', [{devoured: true}, {id: burgerID}], function(err, result) {
+			if (err) throw err;
+			callback(result);
+		});
+	}
+};
 
 // Export orm 
 module.exports = orm; 
